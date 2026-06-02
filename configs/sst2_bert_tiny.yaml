@@ -1,0 +1,32 @@
+run_name: sst2_bert_tiny
+model_name: prajjwal1/bert-tiny
+max_length: 128
+
+seed: 42
+
+dataset:
+  name: glue
+  subset: sst2
+  text_key: sentence
+  label_key: label
+  train_max_samples: 2000
+  eval_max_samples: 500
+  seed: 42
+
+train:
+  epochs: 3
+  train_batch_size: 8
+  eval_batch_size: 16
+  grad_accum_steps: 2
+  lr_full: 5.0e-5
+  lr_lora: 2.0e-4
+  weight_decay: 0.01
+  warmup_ratio: 0.06
+  log_every: 20
+
+lora:
+  alpha: 16
+  dropout: 0.05
+  target_modules: ["query", "key", "value", "dense"]
+
+outputs_dir: outputs/runs
