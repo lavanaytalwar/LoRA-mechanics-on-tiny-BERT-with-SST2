@@ -16,6 +16,7 @@ from tqdm.auto import tqdm
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
+    BertTokenizer,
     DataCollatorWithPadding,
     get_linear_schedule_with_warmup,
 )
@@ -93,7 +94,11 @@ def main() -> None:
     ds = load_sst2(dcfg)
     num_labels, label_names = get_label_info(ds)
 
-    tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"], use_fast=True)
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(cfg["model_name"], use_fast=True)
+    except ValueError:
+        print("Fast tokenizer unavailable; using BertTokenizer.")
+        tokenizer = BertTokenizer.from_pretrained(cfg["model_name"])
     model = AutoModelForSequenceClassification.from_pretrained(cfg["model_name"], num_labels=num_labels)
     model.to(device)
 

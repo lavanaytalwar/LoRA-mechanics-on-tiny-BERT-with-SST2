@@ -5,7 +5,7 @@ max_length: 128
 seed: 42
 
 dataset:
-  name: glue
+  name: nyu-mll/glue
   subset: sst2
   text_key: sentence
   label_key: label

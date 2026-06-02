@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 
 import torch
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from transformers import AutoModelForSequenceClassification, AutoTokenizer, BertTokenizer
 
 
 def main() -> None:
@@ -18,7 +18,11 @@ def main() -> None:
     if not ckpt_dir.exists():
         ckpt_dir = run_dir / "checkpoint"
 
-    tokenizer = AutoTokenizer.from_pretrained(ckpt_dir, use_fast=True)
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(ckpt_dir, use_fast=True)
+    except ValueError:
+        print("Fast tokenizer unavailable; using BertTokenizer.")
+        tokenizer = BertTokenizer.from_pretrained(ckpt_dir)
     model = AutoModelForSequenceClassification.from_pretrained(ckpt_dir)
     model.eval()
 
